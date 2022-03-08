@@ -1,0 +1,8 @@
+type People {
+  name: String!
+}
+
+type Query {
+  allPeople(page: Int!): [People]
+  people(id: String!): People
+}
