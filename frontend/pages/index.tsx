@@ -17,14 +17,13 @@ import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
   const router = useRouter();
-
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted) {
+  if (!mounted || !router.isReady) {
     return null;
   }
 
