@@ -1,0 +1,12 @@
+{
+  "name": "Schema",
+  "schema": "http://localhost:4000/graphql",
+  "extensions": {
+    "endpoints": {
+      "Default": {
+        "url": "http://localhost:4000/graphql",
+        "introspect": true
+      }
+    }
+  }
+}
