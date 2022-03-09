@@ -66,8 +66,8 @@ const People = (props: PeopleProps) => {
     variables: { page: props.page },
   });
 
-  const handleChange = (_event: any, value: number) => {
-    router.push(`?page=${value}`);
+  const handleChange = (_event: React.ChangeEvent<unknown>, page: number) => {
+    router.push(`?page=${page}`);
   };
 
   useEffect(() => {
