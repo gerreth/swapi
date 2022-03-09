@@ -1,6 +1,13 @@
-import { Query, Args, Context, Resolver } from "@nestjs/graphql";
+import {
+  Query,
+  Args,
+  Context,
+  Resolver,
+  ResolveField,
+  Parent,
+} from "@nestjs/graphql";
 
-import { People } from "../../graphql";
+import { Gender, People } from "../../graphql";
 import SWApi from "../../swapi";
 
 interface Context {
@@ -10,6 +17,27 @@ interface Context {
 
 @Resolver("People")
 export default class PeopleResolver {
+  @ResolveField()
+  id(@Parent() people: People) {
+    const urlParts = people.url.split("/");
+
+    const id = urlParts[urlParts.length - 2];
+
+    return id;
+  }
+
+  @ResolveField()
+  gender(@Parent() people: People) {
+    switch (people.gender) {
+      case "male":
+        return Gender.male;
+      case "female":
+        return Gender.female;
+      default:
+        return Gender.notAvailable;
+    }
+  }
+
   @Query("people")
   async people(
     @Args("id") id: string,
