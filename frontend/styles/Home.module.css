@@ -11,3 +11,57 @@
   justify-content: center;
   align-items: center;
 }
+
+.peopleListError {
+  margin: 0 auto;
+  max-width: 240px;
+  height: 580px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.peopleSummary {
+  margin: 8px;
+  cursor: pointer;
+}
+
+.peopleSummaryShimmer {
+  margin: 8px;
+}
+
+.shimmerBody2 {
+  margin: 3px;
+  height: 18px;
+}
+.shimmerCaption {
+  margin: 2px;
+  height: 16px;
+}
+
+.shimmer {
+  background: linear-gradient(to right, #f6f6f6 8%, #f0f0f0 18%, #f6f6f6 33%);
+  background-size: 1000px 100%;
+  border-radius: 8px;
+  animation: shimmer 2.2s linear infinite forwards;
+}
+
+@-webkit-keyframes shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
