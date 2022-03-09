@@ -1,0 +1,27 @@
+query People($id: String!) {
+  people(id: $id) {
+    ...BasicPeopleInfo
+    ...ExtendedPeopleInfo
+  }
+}
+
+query AllPeople($page: Int!) {
+  allPeople(page: $page) {
+    ...BasicPeopleInfo
+  }
+}
+
+fragment BasicPeopleInfo on People {
+  id
+  name
+  gender
+  birth_year
+}
+
+fragment ExtendedPeopleInfo on People {
+  height
+  mass
+  hair_color
+  skin_color
+  eye_color
+}
