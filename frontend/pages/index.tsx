@@ -1,16 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+
+import { ApolloClient } from "@apollo/client";
 import classNames from "classnames";
+
 import Typography from "@mui/material/Typography";
+import PaginationItem from "@mui/material/PaginationItem";
 import Pagination from "@mui/material/Pagination";
 import Box from "@mui/system/Box";
 
 import {
   useAllPeopleQuery,
   People,
+  PeopleDocument,
 } from "../generated/graphql";
 
 import styles from "../styles/Home.module.css";
@@ -61,7 +66,7 @@ type PeopleProps = {
 const People = (props: PeopleProps) => {
   const router = useRouter();
   const [numberOfPages, setNumberOfPages] = useState(9);
-  const { loading, error, data } = useAllPeopleQuery({
+  const { loading, error, data, fetchMore, client } = useAllPeopleQuery({
     variables: { page: props.page },
   });
 
@@ -69,11 +74,50 @@ const People = (props: PeopleProps) => {
     router.push(`?page=${page}`);
   };
 
+  const prefetchPage = useCallback(
+    (page: number) => {
+      fetchMore({ variables: { page } });
+    },
+    [fetchMore],
+  );
+
   useEffect(() => {
     if (data?.allPeople.totalCount) {
       setNumberOfPages(Math.ceil(data.allPeople.totalCount / 10));
     }
   }, [data?.allPeople.totalCount]);
+
+  useEffect(() => {
+    if (props.page < numberOfPages) {
+      prefetchPage(props.page + 1);
+    }
+
+    if (props.page > 1) {
+      prefetchPage(props.page - 1);
+    }
+  }, [prefetchPage, props.page, numberOfPages]);
+
+  const pagination = (
+    <Pagination
+      count={numberOfPages}
+      color="primary"
+      className={styles.pagination}
+      page={props.page}
+      onChange={(_event: React.ChangeEvent<unknown>, page: number) => {
+        router.push(`?page=${page}`);
+      }}
+      renderItem={(item) => {
+        return (
+          <PaginationItem
+            {...item}
+            onMouseOver={(_event) => {
+              prefetchPage(item.page);
+            }}
+          />
+        );
+      }}
+    />
+  );
 
   if (loading) {
     return (
@@ -93,12 +137,7 @@ const People = (props: PeopleProps) => {
           );
         })}
 
-        <Pagination
-          count={numberOfPages}
-          className={styles.pagination}
-          page={props.page}
-          onChange={handleChange}
-        />
+        {pagination}
       </>
     );
   }
@@ -110,12 +149,7 @@ const People = (props: PeopleProps) => {
           Es gab einen Fehler, versuche es später noch einmal.
         </div>
 
-        <Pagination
-          count={numberOfPages}
-          className={styles.pagination}
-          page={props.page}
-          onChange={handleChange}
-        />
+        {pagination}
       </div>
     );
   }
@@ -124,22 +158,17 @@ const People = (props: PeopleProps) => {
     <>
       {data.allPeople.people.map((people) => {
         return (
-          <PeopleSummary key={people.id} people={people} />
+          <PeopleSummary key={people.id} client={client} people={people} />
         );
       })}
 
-      <Pagination
-        count={numberOfPages}
-        color="primary"
-        className={styles.pagination}
-        page={props.page}
-        onChange={handleChange}
-      />
+      {pagination}
     </>
   );
 };
 
 type PeopleSummaryProps = {
+  client: ApolloClient<any>;
   people: Pick<People, "id" | "name" | "gender" | "birth_year">;
 };
 
@@ -151,6 +180,18 @@ const PeopleSummary = (props: PeopleSummaryProps) => {
       className={styles.peopleSummary}
       component="article"
       onClick={() => router.push(`/people/${props.people.id}`)}
+      onMouseOver={async () => {
+        try {
+          await props.client.query({
+            query: PeopleDocument,
+            variables: { id: props.people.id },
+          });
+        } catch (error) {
+          // This query is done to prefetch data. Showing an error here might be
+          // unexpected for a user
+          console.error(error);
+        }
+      }}
     >
       <Typography variant="body2" variantMapping={{ body2: "h2" }}>
         {props.people.name}
