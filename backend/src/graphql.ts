@@ -27,8 +27,8 @@ export interface People {
 }
 
 export interface IQuery {
-    allPeople(page: number): Nullable<Nullable<People>[]> | Promise<Nullable<Nullable<People>[]>>;
-    people(id: string): Nullable<People> | Promise<Nullable<People>>;
+    allPeople(page: number): People[] | Promise<People[]>;
+    people(id: string): People | Promise<People>;
 }
 
 type Nullable<T> = T | null;

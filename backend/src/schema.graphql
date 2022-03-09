@@ -18,6 +18,6 @@ type People {
 }
 
 type Query {
-  allPeople(page: Int!): [People]
-  people(id: String!): People
+  allPeople(page: Int!): [People!]!
+  people(id: String!): People!
 }
