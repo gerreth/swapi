@@ -7,7 +7,7 @@ import {
   Parent,
 } from "@nestjs/graphql";
 
-import { Gender, People } from "../../graphql";
+import { AllPeople, Gender, People } from "../../graphql";
 import SWApi from "../../swapi";
 
 interface Context {
@@ -56,11 +56,11 @@ export default class PeopleResolver {
     @Args("page") page: number,
 
     @Context() context: Context,
-  ): Promise<People[]> {
+  ): Promise<AllPeople> {
     const data = await context.dataSources.swapi.getAllPeople(page);
 
     console.log(data);
 
-    return data.results;
+    return { totalCount: data.count, people: data.results };
   }
 }

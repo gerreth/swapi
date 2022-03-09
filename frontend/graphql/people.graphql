@@ -7,7 +7,10 @@ query People($id: String!) {
 
 query AllPeople($page: Int!) {
   allPeople(page: $page) {
-    ...BasicPeopleInfo
+    totalCount
+    people {
+      ...BasicPeopleInfo
+    }
   }
 }
 

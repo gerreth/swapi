@@ -22,6 +22,10 @@
   text-align: center;
 }
 
+.pagination {
+  margin-top: 24px;
+}
+
 .peopleSummary {
   margin: 8px;
   cursor: pointer;

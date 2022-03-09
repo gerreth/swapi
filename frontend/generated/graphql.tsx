@@ -17,6 +17,12 @@ export type Scalars = {
   Float: number;
 };
 
+export type AllPeople = {
+  __typename?: 'AllPeople';
+  people: Array<People>;
+  totalCount: Scalars['Int'];
+};
+
 export enum Gender {
   Female = 'female',
   Male = 'male',
@@ -29,9 +35,9 @@ export type People = {
   eye_color: Scalars['String'];
   gender: Gender;
   hair_color: Scalars['String'];
-  height: Scalars['Int'];
+  height: Scalars['String'];
   id: Scalars['String'];
-  mass: Scalars['Int'];
+  mass: Scalars['String'];
   name: Scalars['String'];
   skin_color: Scalars['String'];
   url: Scalars['String'];
@@ -39,7 +45,7 @@ export type People = {
 
 export type Query = {
   __typename?: 'Query';
-  allPeople: Array<People>;
+  allPeople: AllPeople;
   people: People;
 };
 
@@ -58,18 +64,18 @@ export type PeopleQueryVariables = Exact<{
 }>;
 
 
-export type PeopleQuery = { __typename?: 'Query', people: { __typename?: 'People', id: string, name: string, gender: Gender, birth_year: string, height: number, mass: number, hair_color: string, skin_color: string, eye_color: string } };
+export type PeopleQuery = { __typename?: 'Query', people: { __typename?: 'People', id: string, name: string, gender: Gender, birth_year: string, height: string, mass: string, hair_color: string, skin_color: string, eye_color: string } };
 
 export type AllPeopleQueryVariables = Exact<{
   page: Scalars['Int'];
 }>;
 
 
-export type AllPeopleQuery = { __typename?: 'Query', allPeople: Array<{ __typename?: 'People', id: string, name: string, gender: Gender, birth_year: string }> };
+export type AllPeopleQuery = { __typename?: 'Query', allPeople: { __typename?: 'AllPeople', totalCount: number, people: Array<{ __typename?: 'People', id: string, name: string, gender: Gender, birth_year: string }> } };
 
 export type BasicPeopleInfoFragment = { __typename?: 'People', id: string, name: string, gender: Gender, birth_year: string };
 
-export type ExtendedPeopleInfoFragment = { __typename?: 'People', height: number, mass: number, hair_color: string, skin_color: string, eye_color: string };
+export type ExtendedPeopleInfoFragment = { __typename?: 'People', height: string, mass: string, hair_color: string, skin_color: string, eye_color: string };
 
 
 
@@ -140,6 +146,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  AllPeople: ResolverTypeWrapper<AllPeople>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Gender: Gender;
   Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -150,6 +157,7 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  AllPeople: AllPeople;
   Boolean: Scalars['Boolean'];
   Int: Scalars['Int'];
   People: People;
@@ -157,14 +165,20 @@ export type ResolversParentTypes = {
   String: Scalars['String'];
 };
 
+export type AllPeopleResolvers<ContextType = any, ParentType extends ResolversParentTypes['AllPeople'] = ResolversParentTypes['AllPeople']> = {
+  people?: Resolver<Array<ResolversTypes['People']>, ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type PeopleResolvers<ContextType = any, ParentType extends ResolversParentTypes['People'] = ResolversParentTypes['People']> = {
   birth_year?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   eye_color?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   gender?: Resolver<ResolversTypes['Gender'], ParentType, ContextType>;
   hair_color?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  height?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  height?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  mass?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  mass?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   skin_color?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -172,11 +186,12 @@ export type PeopleResolvers<ContextType = any, ParentType extends ResolversParen
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  allPeople?: Resolver<Array<ResolversTypes['People']>, ParentType, ContextType, RequireFields<QueryAllPeopleArgs, 'page'>>;
+  allPeople?: Resolver<ResolversTypes['AllPeople'], ParentType, ContextType, RequireFields<QueryAllPeopleArgs, 'page'>>;
   people?: Resolver<ResolversTypes['People'], ParentType, ContextType, RequireFields<QueryPeopleArgs, 'id'>>;
 };
 
 export type Resolvers<ContextType = any> = {
+  AllPeople?: AllPeopleResolvers<ContextType>;
   People?: PeopleResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 };
@@ -239,7 +254,10 @@ export type PeopleQueryResult = Apollo.QueryResult<PeopleQuery, PeopleQueryVaria
 export const AllPeopleDocument = gql`
     query AllPeople($page: Int!) {
   allPeople(page: $page) {
-    ...BasicPeopleInfo
+    totalCount
+    people {
+      ...BasicPeopleInfo
+    }
   }
 }
     ${BasicPeopleInfoFragmentDoc}`;
