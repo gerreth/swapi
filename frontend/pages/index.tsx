@@ -69,11 +69,6 @@ const People = (props: PeopleProps) => {
   const { loading, error, data, fetchMore, client } = useAllPeopleQuery({
     variables: { page: props.page },
   });
-
-  const handleChange = (_event: React.ChangeEvent<unknown>, page: number) => {
-    router.push(`?page=${page}`);
-  };
-
   const prefetchPage = useCallback(
     (page: number) => {
       fetchMore({ variables: { page } });
@@ -124,7 +119,16 @@ const People = (props: PeopleProps) => {
       <>
         {[...Array(10).keys()].map((index) => {
           return (
-            <Box key={index} className={styles.peopleSummary}>
+            <Box
+              key={index}
+              className={styles.peopleSummary}
+              role="progressbar"
+              aria-busy="true"
+              aria-valuetext="loading"
+              aria-live="polite"
+              aria-valuemin={0}
+              aria-valuemax={100}
+            >
               <Box
                 width={60 + Math.random() * 120}
                 className={classNames(styles.shimmer, styles.shimmerBody2)}
