@@ -15,6 +15,25 @@ type People {
   hair_color: String!
   skin_color: String!
   eye_color: String!
+  films: [String!]!
+  filmsInfo: [Film!]!
+}
+
+type Film {
+  title: String!
+  episode_id: Int!
+  opening_crawl: String!
+  director: String!
+  producer: String!
+  release_date: String!
+  characters: [String!]!
+  planets: [String!]!
+  starships: [String!]!
+  vehicles: [String!]!
+  species: [String!]!
+  created: String!
+  edited: String!
+  url: String!
 }
 
 type Query {

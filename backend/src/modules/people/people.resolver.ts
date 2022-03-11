@@ -27,6 +27,19 @@ export default class PeopleResolver {
   }
 
   @ResolveField()
+  async filmsInfo(@Parent() people: People, @Context() context: Context) {
+    const films = people.films.map((film) => {
+      const urlParts = film.split("/");
+
+      const id = urlParts[urlParts.length - 2];
+
+      return context.dataSources.swapi.getFilm(id);
+    });
+
+    return await Promise.all(films);
+  }
+
+  @ResolveField()
   gender(@Parent() people: People) {
     switch (people.gender) {
       case "male":

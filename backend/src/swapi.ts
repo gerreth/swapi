@@ -13,4 +13,8 @@ export default class SWAPI extends RESTDataSource {
   async getAllPeople(page = 1) {
     return this.get(`people?page=${page}`);
   }
+
+  async getFilm(id: string) {
+    return this.get(`films/${id}`);
+  }
 }
