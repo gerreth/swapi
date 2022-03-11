@@ -13,7 +13,8 @@ export enum Gender {
     notAvailable = "notAvailable"
 }
 
-export interface People {
+export class People {
+    __typename?: 'People';
     id: string;
     url: string;
     name: string;
@@ -28,7 +29,8 @@ export interface People {
     filmsInfo: Film[];
 }
 
-export interface Film {
+export class Film {
+    __typename?: 'Film';
     title: string;
     episode_id: number;
     opening_crawl: string;
@@ -45,12 +47,16 @@ export interface Film {
     url: string;
 }
 
-export interface IQuery {
-    allPeople(page: number): AllPeople | Promise<AllPeople>;
-    people(id: string): People | Promise<People>;
+export abstract class IQuery {
+    __typename?: 'IQuery';
+
+    abstract allPeople(page: number): AllPeople | Promise<AllPeople>;
+
+    abstract people(id: string): People | Promise<People>;
 }
 
-export interface AllPeople {
+export class AllPeople {
+    __typename?: 'AllPeople';
     totalCount: number;
     people: People[];
 }

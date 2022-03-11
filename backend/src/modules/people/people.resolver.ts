@@ -14,7 +14,6 @@ interface Context {
   req: Request;
   dataSources: { swapi: SWApi };
 }
-
 @Resolver("People")
 export default class PeopleResolver {
   @ResolveField()
@@ -57,11 +56,7 @@ export default class PeopleResolver {
 
     @Context() context: Context,
   ): Promise<People> {
-    const result = await context.dataSources.swapi.getPeople(id);
-
-    console.log(result);
-
-    return result;
+    return context.dataSources.swapi.getPeople(id);
   }
 
   @Query("allPeople")
@@ -71,8 +66,6 @@ export default class PeopleResolver {
     @Context() context: Context,
   ): Promise<AllPeople> {
     const data = await context.dataSources.swapi.getAllPeople(page);
-
-    console.log(data);
 
     return { totalCount: data.count, people: data.results };
   }
