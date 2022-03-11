@@ -23,6 +23,24 @@ export type AllPeople = {
   totalCount: Scalars['Int'];
 };
 
+export type Film = {
+  __typename?: 'Film';
+  characters: Array<Scalars['String']>;
+  created: Scalars['String'];
+  director: Scalars['String'];
+  edited: Scalars['String'];
+  episode_id: Scalars['Int'];
+  opening_crawl: Scalars['String'];
+  planets: Array<Scalars['String']>;
+  producer: Scalars['String'];
+  release_date: Scalars['String'];
+  species: Array<Scalars['String']>;
+  starships: Array<Scalars['String']>;
+  title: Scalars['String'];
+  url: Scalars['String'];
+  vehicles: Array<Scalars['String']>;
+};
+
 export enum Gender {
   Female = 'female',
   Male = 'male',
@@ -33,6 +51,8 @@ export type People = {
   __typename?: 'People';
   birth_year: Scalars['String'];
   eye_color: Scalars['String'];
+  films: Array<Scalars['String']>;
+  filmsInfo: Array<Film>;
   gender: Gender;
   hair_color: Scalars['String'];
   height: Scalars['String'];
@@ -64,7 +84,7 @@ export type PeopleQueryVariables = Exact<{
 }>;
 
 
-export type PeopleQuery = { __typename?: 'Query', people: { __typename?: 'People', id: string, name: string, gender: Gender, birth_year: string, height: string, mass: string, hair_color: string, skin_color: string, eye_color: string } };
+export type PeopleQuery = { __typename?: 'Query', people: { __typename?: 'People', id: string, name: string, gender: Gender, birth_year: string, height: string, mass: string, hair_color: string, skin_color: string, eye_color: string, filmsInfo: Array<{ __typename?: 'Film', title: string }> } };
 
 export type AllPeopleQueryVariables = Exact<{
   page: Scalars['Int'];
@@ -75,7 +95,7 @@ export type AllPeopleQuery = { __typename?: 'Query', allPeople: { __typename?: '
 
 export type BasicPeopleInfoFragment = { __typename?: 'People', id: string, name: string, gender: Gender, birth_year: string };
 
-export type ExtendedPeopleInfoFragment = { __typename?: 'People', height: string, mass: string, hair_color: string, skin_color: string, eye_color: string };
+export type ExtendedPeopleInfoFragment = { __typename?: 'People', height: string, mass: string, hair_color: string, skin_color: string, eye_color: string, filmsInfo: Array<{ __typename?: 'Film', title: string }> };
 
 
 
@@ -148,6 +168,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   AllPeople: ResolverTypeWrapper<AllPeople>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Film: ResolverTypeWrapper<Film>;
   Gender: Gender;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   People: ResolverTypeWrapper<People>;
@@ -159,6 +180,7 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   AllPeople: AllPeople;
   Boolean: Scalars['Boolean'];
+  Film: Film;
   Int: Scalars['Int'];
   People: People;
   Query: {};
@@ -171,9 +193,29 @@ export type AllPeopleResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type FilmResolvers<ContextType = any, ParentType extends ResolversParentTypes['Film'] = ResolversParentTypes['Film']> = {
+  characters?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  created?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  director?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  edited?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  episode_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  opening_crawl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  planets?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  producer?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  release_date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  species?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  starships?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  vehicles?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type PeopleResolvers<ContextType = any, ParentType extends ResolversParentTypes['People'] = ResolversParentTypes['People']> = {
   birth_year?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   eye_color?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  films?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  filmsInfo?: Resolver<Array<ResolversTypes['Film']>, ParentType, ContextType>;
   gender?: Resolver<ResolversTypes['Gender'], ParentType, ContextType>;
   hair_color?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   height?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -192,6 +234,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type Resolvers<ContextType = any> = {
   AllPeople?: AllPeopleResolvers<ContextType>;
+  Film?: FilmResolvers<ContextType>;
   People?: PeopleResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 };
@@ -212,6 +255,9 @@ export const ExtendedPeopleInfoFragmentDoc = gql`
   hair_color
   skin_color
   eye_color
+  filmsInfo {
+    title
+  }
 }
     `;
 export const PeopleDocument = gql`

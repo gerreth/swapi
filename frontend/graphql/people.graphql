@@ -27,4 +27,7 @@ fragment ExtendedPeopleInfo on People {
   hair_color
   skin_color
   eye_color
+  filmsInfo {
+    title
+  }
 }
