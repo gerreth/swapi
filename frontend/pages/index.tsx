@@ -35,6 +35,8 @@ const Home: NextPage = () => {
   const page = router.query.page ?? "1";
 
   if (Array.isArray(page)) {
+    // TODO!: Add error view
+
     return (
       <div className={styles.container}>
         <Head>
@@ -117,6 +119,12 @@ const People = (props: PeopleProps) => {
   if (loading) {
     return (
       <>
+        <Box mb={3}>
+          <Typography variant="h4" variantMapping={{ h4: "h1" }}>
+            People from Star Wars
+          </Typography>
+        </Box>
+
         {[...Array(10).keys()].map((index) => {
           return (
             <Box
@@ -149,8 +157,14 @@ const People = (props: PeopleProps) => {
   if (error || !data) {
     return (
       <div>
+        <Box mb={3}>
+          <Typography variant="h4" variantMapping={{ h4: "h1" }}>
+            People from Star Wars
+          </Typography>
+        </Box>
+
         <div className={styles.peopleListError}>
-          Es gab einen Fehler, versuche es später noch einmal.
+          {error?.message ?? "An unforeseen error occured, try again later."}
         </div>
 
         {pagination}
@@ -160,6 +174,12 @@ const People = (props: PeopleProps) => {
 
   return (
     <>
+      <Box mb={3}>
+        <Typography variant="h4" variantMapping={{ h4: "h1" }}>
+          People from Star Wars
+        </Typography>
+      </Box>
+
       {data.allPeople.people.map((people) => {
         return (
           <PeopleSummary key={people.id} client={client} people={people} />
@@ -200,6 +220,7 @@ const PeopleSummary = (props: PeopleSummaryProps) => {
       <Typography variant="body2" variantMapping={{ body2: "h2" }}>
         {props.people.name}
       </Typography>
+
       <Typography variant="caption">
         Gender: {props.people.gender}, Birthyear: {props.people.birth_year}
       </Typography>

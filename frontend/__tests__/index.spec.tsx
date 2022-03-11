@@ -63,7 +63,7 @@ describe("Home", () => {
     render(<Home />);
 
     expect(screen.getAllByRole("button")).toHaveLength(8);
-    screen.getByText(/Es gab einen Fehler, versuche es später noch einmal./);
+    screen.getByText(/Failed to fetch/);
   });
 
   it("renders correctly with expected data on page 1", () => {
@@ -165,7 +165,7 @@ describe("Home", () => {
 
     render(<Home />);
 
-    expect(screen.getAllByRole("heading")).toHaveLength(10);
+    expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(10);
 
     for (const character of people) {
       screen.getByRole("heading", { name: character.name });
@@ -280,7 +280,7 @@ describe("Home", () => {
 
     render(<Home />);
 
-    expect(screen.getAllByRole("heading")).toHaveLength(2);
+    expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(2);
 
     for (const character of people) {
       screen.getByRole("heading", { name: character.name });
